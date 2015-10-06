@@ -4,7 +4,7 @@
 
   <groupId>net.elementj</groupId>
   <artifactId>jdbc-helper</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.3</version>
   <packaging>jar</packaging>
 
   <name>jdbc-helper</name>
@@ -21,5 +21,11 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+	<dependency>
+		<groupId>joda-time</groupId>
+		<artifactId>joda-time</artifactId>
+		<version>2.8.2</version>
+		<scope>provided</scope>
+	</dependency>
   </dependencies>
 </project>

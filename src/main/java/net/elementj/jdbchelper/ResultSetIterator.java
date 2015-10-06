@@ -7,6 +7,9 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+
 /**
  * An iterator for retrieving ordered columns from a ResultSet. 
  * @author Jason Woodrich
@@ -54,6 +57,14 @@ public class ResultSetIterator {
 	public Time nextTime() throws SQLException {
 		return rs.getTime(idx++);
 	}
+	public DateTime nextDateTime() throws SQLException {
+		Date date=nextTimestamp();
+		return date!=null?new DateTime(date.getTime()):null;
+	}
+	public DateTime nextDateTime(DateTimeZone dtz) throws SQLException {
+		Date date=nextTimestamp();
+		return date!=null?new DateTime(date.getTime(),dtz):null;
+	}
 	public BigDecimal nextBigDecimal() throws SQLException {
 		return rs.getBigDecimal(idx++);
 	}
@@ -68,5 +79,58 @@ public class ResultSetIterator {
 	}
 	public void setDefaultFalseValue(String defaultFalseValue) {
 		this.defaultFalseValue = defaultFalseValue;
-	}	
+	}
+	public void skip(int count) {
+		idx+=count;
+	}
+	public void skip() {
+		idx++;
+	}
+	public boolean isNull() throws SQLException {
+		rs.getObject(idx);
+		return rs.wasNull();
+	}
+	public boolean wasNull() throws SQLException {
+		return rs.wasNull();
+	}
+	public Double nextDoubleWrapper() throws SQLException {
+		double ret=rs.getDouble(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Float nextFloatWrapper() throws SQLException {
+		float ret=rs.getFloat(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Short nextShortWrapper() throws SQLException {
+		short ret=rs.getShort(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Integer nextIntegerWrapper() throws SQLException {
+		int ret=rs.getInt(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Byte nextByteWrapper() throws SQLException {
+		byte ret=rs.getByte(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Long nextLongWrapper() throws SQLException {
+		long ret=rs.getLong(idx++);
+		if (rs.wasNull()) { return null; }
+		return ret;
+	}
+	public Boolean nextBooleanWrapper(Boolean defaultval) throws SQLException {
+		return nextBooleanWrapper(defaultTrueValue,defaultFalseValue,defaultval);
+	}
+	public Boolean nextBooleanWrapper(String trueval, String falseval, Boolean defaultval) throws SQLException {
+		String tmp=rs.getString(idx++);
+		if (rs.wasNull()) { return null; }
+		if (trueval!=null&&trueval.equalsIgnoreCase(tmp)) { return true; }
+		if (falseval!=null&&falseval.equalsIgnoreCase(tmp)) { return false; }
+		return defaultval;
+	}
 }
